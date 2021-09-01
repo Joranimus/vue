@@ -1,0 +1,38 @@
+[
+    {
+        "title":"basic", 
+        "price":"59",
+        "type":"white", 
+        "cardParams": [
+            {"title": "Unlimited", "value": "Bandwidth", "id": "1"},
+            {"title": "Unlimited","value": "Space", "id":" 2"},
+            {"title": "One Time","value": "Fees", "id": "3"},
+            {"title": "24/7","value": "Free Support", "id": 4},
+            {"title": "Cpannel","value": "Access", "id": "5"}
+        ]
+    },
+    {
+        "title":"premium", 
+        "price":"99",
+        "type":"green",  
+        "cardParams": [
+            {"title": "Unlimited", "value": "Bandwidth", "id": "1"},
+            {"title": "Unlimited","value": "Space", "id":" 2"},
+            {"title": "One Time","value": "Fees", "id": "3"},
+            {"title": "24/7","value": "Free Support", "id": 4},
+            {"title": "Cpannel","value": "Access", "id": "5"}
+        ]
+    },
+    {
+        "title":"ultimate", 
+        "price":"149",
+        "type":"white",  
+        "cardParams": [
+            {"title": "Unlimited", "value": "Bandwidth", "id": "1"},
+            {"title": "Unlimited","value": "Space", "id":" 2"},
+            {"title": "One Time","value": "Fees", "id": "3"},
+            {"title": "24/7","value": "Free Support", "id": 4},
+            {"title": "Cpannel","value": "Access", "id": "5"}
+        ]
+    }
+]

@@ -6,30 +6,50 @@
             <div class="subtitle">PRODUCT PACKAGES</div>
             <div class="title"> Select your <span>best deal !</span></div>
             <div class="card__wrap">
-
-                <card title="basic" price="56" :style="{background: activeColor}"></card>
-                <card title="premium" price="99"></card>
-                <card title="ultimate" price="149"></card>
-
+                
+                <card
+                    v-for="item in data"
+                    :key="item.title"
+                    :title="item.title" :price="item.price" :cardParams="item.cardParams" :type="item.type"
+                />
             </div>
+            <div class="pin">Want to know more ? <a href="#">read article,</a> check <a href="#">FAQ</a>, or <a href="#">contact us</a></div>
         </div>
+        
     </div>
     
 </template>
 
 <script>
 import card from './offerCard.vue'
+const axios = require('axios');
 
 export default {
     name: "BestDeal",
     components: {
         card
     },
-    props: {
-        activeColor: 'red',
-        activColor: 'red'
+    data() {
+        return{
+            data:[],
+        }
+        
+    }, 
+    //props:['data'],
+    created(){
+        axios.get('/mock/example.json')
+        .then(response => {
+            this.data = response.data
+            }) 
+
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
     }
-    
 }
 
 </script>
@@ -59,5 +79,11 @@ span{
 .card__wrap{
     display: flex;
     justify-content: space-between;
+}
+.pin{
+    font-size: 15px;
+    color: #a5a5a5;
+    margin-top: 15px;
+    font-weight: 300;
 }
 </style>
