@@ -3,6 +3,15 @@
     
     <BestDeal/>
     <contactUs/>
+    <filterExample>
+        <template v-slot:afterField>
+        <h1>Зде страницы</h1>
+      </template>
+       <template v-slot:afterList>
+         <BestDeal/>
+      </template>
+
+    </filterExample>
   
   </div>
 </template>
@@ -11,12 +20,14 @@
 <script>
 import BestDeal from './components/BestDeal.vue'
 import contactUs from './components/contactUs.vue'
+import filterExample from './components/filterExample.vue'
 
 export default {
   name: 'App',
   components: {
     BestDeal,
-    contactUs
+    contactUs,
+    filterExample
   },
 }
 </script>
@@ -24,6 +35,7 @@ export default {
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap');
+@import "vue-select/src/scss/vue-select.scss";
 
 $main: #1abc9c;
 body{

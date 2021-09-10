@@ -1,53 +1,53 @@
 <template>
-    <div>
+    <div class="form">
         <div class="_f _j-between">
-            <div class="form-group" :class="{ 'form-group--error': $v.name.$error }">
+            <!-- <div class="form-group" :class="{ 'form-group--error': $v.name.$error }">
                 <input class="form__input" v-model.trim="$v.name.$model" placeholder="Your Name"/>
                 <div class="error" v-if="$v.name.$invalid && $v.name.$dirty">Field is required</div>
                 <div class="error" v-if="!$v.name.minLength">Name must have at least {{$v.name.$params.minLength.min}} letters.</div>
-            </div>
+            </div> -->
         
             <div class="form-group" :class="{ 'form-group--error': $v.form.name.$error }">
                 <input class="form__input" v-model.trim="$v.form.name.$model" type="text" name="name" placeholder="Your Name">
-                <div class="error" v-if="!$v.form.name.required">Field is required</div>
-                <div class="error" v-if="!$v.form.name.minLength">Name must have at least {{$v.form.name.$params.minLength.min}} letters.</div>
+                <div class="error" v-if="!$v.form.name.required && $v.form.name.$dirty">Field is required</div>
+                <div class="error" v-if="!$v.form.name.minLength && $v.form.name.$dirty">Name must have at least {{$v.form.name.$params.minLength.min}} letters.</div>
             </div>
 
 
-            <div class="form-group" :class="{ 'form-group--error': $v.mail.$error }">
-                <input class="form__input" v-model.trim="$v.mail.$model" type="email" name="mail" placeholder="Email">
-                <div class="error" v-if="!$v.mail.required">Field is required</div>
-                <div class="error" v-if="!$v.mail.email">Incorrect format.</div>
+            <div class="form-group" :class="{ 'form-group--error': $v.form.mail.$error }">
+                <input class="form__input" v-model.trim="$v.form.mail.$model" type="email" name="mail" placeholder="Email">
+                <div class="error" v-if="!$v.form.mail.required && $v.form.mail.$dirty">Field is required</div>
+                <div class="error" v-if="!$v.form.mail.email && $v.form.mail.$dirty">Incorrect format.</div>
             </div>
             
         </div>
         
         
-        <select name="select" v-model="$v.country.$model" :class="{ 'select--error': $v.country.$error }">
+        <select name="select" v-model="$v.form.country.$model" :class="{ 'select--error': $v.form.country.$error }">
             <option disabled selected >Choose country</option>
             <option v-for="country in countries" :key="country.value" :value="country.value" >{{country.name}}</option>
         </select>
         
-        <textarea v-model="$v.text.$model" name="text" cols="80" rows="10" :class="{ 'text--error': $v.text.$error }"></textarea>
-        <div class="_mb-15">Do you like our service ?</div>
+        <textarea v-model="$v.form.text.$model" name="text" cols="80" rows="10" :class="{ 'text--error': $v.form.text.$error }"></textarea>
         
-        <div class="form-group " :class="{ 'form-group--error': $v.like.$error }">
+        <div class="_mb-15 _text-l">Do you like our service ?</div>
+        <div class="form-group " :class="{ 'form-group--error': $v.form.like.$error }">
                 <label class="radio">
                     YES
-                    <input type="radio" name="like" value="yes" v-model="like">
+                    <input type="radio" name="like" value="yes" v-model="form.like">
                     <span></span>
                 </label>
                 <label class="radio">
                     NO
-                    <input type="radio" name="like" value="no" v-model="like">
+                    <input type="radio" name="like" value="no" v-model="form.like">
                     <span></span>
                 </label>
-                <div class="error" v-if="!$v.like.required">Field is required</div>
+                <div class="error" v-if="!$v.form.like.required && $v.form.like.$dirty">Field is required</div>
         </div>
         
 
 
-        <div class="button" @click="submit" :disabled="submitStatus === 'PENDING'">Submit!</div>
+        <div class="button" @click="submit(); sendRequest()" :disabled="submitStatus === 'PENDING'">Submit!</div>
         <p class="typo__p" v-if="submitStatus === 'OK'">Thanks for your submission!</p>
         <p class="typo__p" v-if="submitStatus === 'ERROR'">Please fill the form correctly.</p>
         <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
@@ -56,27 +56,16 @@
 </template>
 
 <script>
-import { validationMixin } from 'vuelidate'
-import { required, minLength, email} from 'vuelidate/lib/validators'
+import { required, minLength, email, maxLength} from 'vuelidate/lib/validators'
+const axios = require('axios');
 export default {
-    mixins:[validationMixin],
     data(){
         return{
-            name: '',
-            mail: '',
-            country: 'Choose country',
-            text: '',
-            like: '',
             submitStatus: null,
             form:{
-                asd: {
-                        asdasdd: {
-                            asd: 'asd'
-                        }
-                },
                 name: '',
                 mail: '',
-                country: '',
+                country: 'Choose country',
                 text: '',
                 like: '',
 
@@ -92,72 +81,55 @@ export default {
     },
     validations: {
         form: {
-            name: {
-                required,
-                minLength: minLength(4),
-            },
-        },
-        name: {
-                required,
-                minLength: minLength(4),
-        },
-        mail: {
-                required,
-                email,
-        },
-        country: {
-            required
-        },
-        text: {
-            required
-        },
-        like: {
-            required
+            name: {required, minLength: minLength(4)},
+            mail: {required, email},
+            country: {maxLength: maxLength(4)},
+            text: {required},
+            like: {required},
         },
     },
     mounted(){
 console.log(this)
     },
     methods: {
-        // sendRequest(){
-            // axios.post('/mock/example.json',{
-            //     name: this.name,
-            //     email: this.email
-            // })
-            //         .then(response => {
-            //             this.data = response.data
-            //             }) 
-
-            //         .catch(function (error) {
-            //             // handle error
-            //             console.log(error);
-            //         })
-            //         .then(function () {
-            //             // always executed
-            //         });
-        // },
-              // status(validation) {
-        //     return {
-        //     error: validation.$error,
-        //     dirty: validation.$dirty
-        //     }
-        // },
         submit() {
-            console.log(this)
+            console.log('submit!')
             this.$v.$touch()
-            // if (this.$v.$invalid) {
-               
-            // } else {
-            // //  this.sendRequest();         
-            // }
-        }
+            if (this.$v.$invalid) {
+                this.submitStatus = 'ERROR'
+            } else {
+                // do your submit logic here
+                this.submitStatus = 'PENDING'
+                setTimeout(() => {
+                this.submitStatus = 'OK'
+                
+                }, 500)
+            }
+        },
+        sendRequest(){
+            axios.post('/mock/form.json', {
+                name: this.form.name
+                })
+                    .then(function (response) {
+                        console.log(response);
+                    })
+
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+        },
+        
     }
 }
 </script>
 
 <style lang="scss">
 $main: #1abc9c;
-form{
+.form{
     font-family: 'Ubuntu', sans-serif;
     height: 470px;
     width: 620px;
@@ -186,13 +158,13 @@ form{
         }
     }
     input[type=radio]{
-        // display: none;
+        display: none;
         width: 18px;
         height: 18px;
     }
     .button{
         background: $main;
-        padding: 0;
+        padding: 15px;
         color: #fff;
         font-size: 20px;
         height: 50px;
@@ -214,6 +186,7 @@ form{
     color: red;
 }
 .radio{
+    padding-left: 25px;
     display: inline-block;
     width: 49%;
     cursor: pointer;
